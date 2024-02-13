@@ -16,15 +16,37 @@ std::string convToLower(std::string src)
 std::set<std::string> parseStringToWords(string rawWords)
 {
 
+    std::set<std::string> words;
 
+    std::string sub;
+    int start = 0;
 
+    for(size_t i = 0; i < rawWords.length(); i++) {
+        // if the curr character is punctuation
+        if(std::ispunct(rawWords[i]) || rawWords[i] == ' ') {
+            // std::cout << i << std::endl;
+            // create a substring that stores the current word up until the punct
+            sub = rawWords.substr(start, i - start); 
+            // trims rawwords of any whitespace
+            trim(sub);
+            // convert to lower
+            sub = convToLower(sub);
+            // if the length of the word is greater than 2, then add to set of words
+            if(sub.length() >= 2) {
+                words.insert(sub);
+            }
+            // increment start to the index after the punctuation
+            start = i + 1;
+        }
+    }
+    sub = rawWords.substr(start, rawWords.length() - start); 
+    sub = convToLower(trim(sub));
 
+    if(sub.length() >= 2) {
+        words.insert(sub);
+    }
 
-
-
-
-
-
+    return words;
 }
 
 /**************************************************

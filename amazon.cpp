@@ -5,10 +5,12 @@
 #include <vector>
 #include <iomanip>
 #include <algorithm>
+#include <queue>
 #include "product.h"
 #include "db_parser.h"
 #include "product_parser.h"
 #include "util.h"
+#include "mydatastore.h"
 
 using namespace std;
 struct ProdNameSorter {
@@ -29,7 +31,7 @@ int main(int argc, char* argv[])
      * Declare your derived DataStore object here replacing
      *  DataStore type to your derived type
      ****************/
-    DataStore ds;
+    MyDataStore ds;
 
 
 
@@ -62,6 +64,7 @@ int main(int argc, char* argv[])
     cout << "====================================" << endl;
 
     vector<Product*> hits;
+
     bool done = false;
     while(!done) {
         cout << "\nEnter command: " << endl;
@@ -100,9 +103,33 @@ int main(int argc, char* argv[])
                 done = true;
             }
 	    /* Add support for other commands here */
+            else if ( cmd == "ADD") {
+                string username;
+                int hit_index = -1;
+                ss >> username;
+                ss >> hit_index;
+                if(hit_index <= 0 || hit_index > hits.size()) {
+                    cout << "Invalid request" << endl;
+                }
+                else {
+                    ds.addCart(username, hits[hit_index-1]);
+                }
+                
+            }
 
-
-
+            else if ( cmd == "VIEWCART") {
+                string username;
+                ss >> username;
+                
+                ds.viewCart(username);
+                 
+            }
+            // SHOULD WORK
+            else if ( cmd == "BUYCART") {
+                string username;
+                ss >> username;
+                ds.buyCart(username);
+            }
 
             else {
                 cout << "Unknown command" << endl;

@@ -1,33 +1,48 @@
 #ifndef MYDATASTORE_H
 #define MYDATASTORE_H
-
-#include "datastore.h"
 #include <map>
-#include <set>
-#include <vector>
-#include <string>
-#include "product.h"
-#include "user.h"
+#include <queue>
+#include "datastore.h"
 
 class MyDataStore : public DataStore {
 public:
-    MyDataStore();
-    virtual ~MyDataStore();
+     virtual ~MyDataStore();
 
-    virtual void addProduct(Product* p);
-    virtual void addUser(User* u);
-    virtual std::vector<Product*> search(std::vector<std::string>& terms, int type);
-    virtual void dump(std::ostream& ofile);
-    virtual void addToCart(const std::string& username, Product* p);
-    virtual void viewCart(const std::string& username);
-    virtual void buyCart(const std::string& username);
+    /**
+     * Adds a product to the data store
+     */
+     void addProduct(Product* p);
 
+    /**
+     * Adds a user to the data store
+     */
+     void addUser(User* u);
+
+    /**
+     * Performs a search of products whose keywords match the given "terms"
+     *  type 0 = AND search (intersection of results for each term) while
+     *  type 1 = OR search (union of results for each term)
+     */
+     std::vector<Product*> search(std::vector<std::string>& terms, int type);
+
+    /**
+     * Reproduce the database file from the current Products and User values
+     */
+     void dump(std::ostream& ofile);
+
+
+    void buyCart(const std::string& username);
+
+    void viewCart(const std::string& username);
+
+    void addCart(const std::string& username, Product* prod);
 
 private:
-    std::vector<User*> users;
-    std::vector<Product*> products;
-    std::map<std::string, std::set<Product*>> keywordToProductMap;
-    std::map<std::string, std::vector<Product*>> userCarts; 
-};
+//include map
+    std::map<std::string, std::set<Product*>> products;
+    std::set<User*> users;
+    std::set<Product*> prod_set;
+    std::map<std::string, std::queue<Product*>> cart;
 
-#endif // MYDATASTORE_H
+};
+#endif
